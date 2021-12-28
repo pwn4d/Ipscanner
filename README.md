@@ -1,4 +1,4 @@
-# IP Scanner
+# IpSpider
 
 This is a python script for randomly finding IPs and then scanning selected ports on them
 
