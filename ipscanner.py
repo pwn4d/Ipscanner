@@ -25,6 +25,9 @@ parser.add_argument('--search' , "-s",help="Searches logs for IPs with open port
 parser.add_argument("port", type=str, help="Ports (seperate each one with a comma -p 80,443,21 |Default ports are 1-1000)", nargs='?')
 args = parser.parse_args()
 
+#creating scans directory
+if not os.path.exists('~/scans'):
+    os.system('mkdir ~/scans')
 
 if not args.ports:
     for i in range(1000):
@@ -86,7 +89,7 @@ def log_ip(ip):
     scan(ip)
     os.system(f'touch ~/scans/{ip}_{current_open}------{hostname}')
 
-    f = open(f"/home/giddy/scans/{ip}", "a")
+    f = open(f"{os.getenv('HOME')}/scans/{ip}", "a")
 
     f.write(str(port_info))
     print(f'Writen to file ~/scans/{ip}')
