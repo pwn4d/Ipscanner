@@ -26,7 +26,7 @@ parser.add_argument("port", type=str, help="Ports (seperate each one with a comm
 args = parser.parse_args()
 
 #creating scans directory
-if os.path.isdir('~/scans'):
+if not os.path.exists('~/scans'):
     os.system('mkdir ~/scans')
 
 if not args.ports:
