@@ -4,6 +4,9 @@ This is a python script for randomly finding IPs and then scanning selected port
 The code in this repository is severly broken, My friend GiddyLinux got it a *tinsy* bit wrong but I will fix it when I can.
 
 ## Installation
+```bash
+cd IpSpider
+```
 
 ```bash
 python3 setup.py
