@@ -88,7 +88,7 @@ def log_ip(ip):
     scan(ip)
     os.system(f'touch ~/scans/{ip}_{current_open}------{hostname}')
 
-    f = open(f"{os.getenv("HOME")}/scans/{ip}", "a")
+    f = open(f"{os.getenv('HOME')}/scans/{ip}", "a")
 
     f.write(str(port_info))
     print(f'Writen to file ~/scans/{ip}')
