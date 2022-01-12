@@ -28,6 +28,9 @@ PLEASE ADD YOUR DISCORD WEBHOOK URL TO THE URL PARAMETER IN THE CODE
 python3 main.py <PORT>
 ```
 
+![image](https://user-images.githubusercontent.com/86152883/149152422-f3b019bf-e013-4d7f-98ed-e80a734ee897.png)
+
+
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
