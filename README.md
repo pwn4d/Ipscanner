@@ -1,5 +1,9 @@
 # IpSpider
-This is a python script for randomly finding IPs and then scanning selected ports on them
+
+
+THIS IS A STABLE REWRITE OF THE MAIN BRANCH
+
+
 
 
 ## Installation
