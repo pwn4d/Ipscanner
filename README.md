@@ -1,32 +1,35 @@
 # IpSpider
-This is a python script for randomly finding IPs and then scanning selected ports on them
+
+
+THIS IS A STABLE REWRITE OF THE MAIN BRANCH
+
+
 
 
 ## Installation
 ```bash
 cd IpSpider
 ```
-
-```bash
-python3 setup.py
 ```
+sudo su
+```
+
+```
+ulimit -n 1000000
+```
+
+
+
+PLEASE ADD YOUR DISCORD WEBHOOK URL TO THE URL PARAMETER IN THE CODE
 
 ## Usage
 
 ```python
-python3 ipscanner
+python3 main.py <PORT>
 ```
-To randomly generate IPs and scan the first 1000 ports
-```python
-python3 ipscanner -s 
-```
-To List All Successfully Found IPs along with the open ports found on those IPs
-```python
-python3 ipscanner -p 80,21,22
-```
-To scan custom ports
 
-IP ranges coming soon...
+![image](https://user-images.githubusercontent.com/86152883/149152422-f3b019bf-e013-4d7f-98ed-e80a734ee897.png)
+
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
