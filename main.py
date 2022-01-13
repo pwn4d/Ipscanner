@@ -24,8 +24,8 @@ hostname = []
 data = {}
 signal.signal(signal.SIGINT, lambda x, y: sys.exit(0))
 message = ''
-url1 = 'https://discordapp.com/api/webhooks/930913252865609850/W6ptZW-tBtlglGcXBuU6CDlTIlS6M13LG14qCK_oZ7Lg6iXRuS03Rs3siywfbmSv38sA' #NORMAL SCANNING WEBHOOK
-url2 = 'https://discord.com/api/webhooks/931115185559728160/yJxEF6RflXgRWmVDgVREkfaLy06BPzbhvWCsqLYE2vKCMArOK69-Nahm0_xzkQZg4bO4' #TLD WEBHOOK
+url1 = '' #NORMAL SCANNING WEBHOOK
+url2 = '' #TLD WEBHOOK
 
 def webhook_send(ip, port,hostname, webhook):
     data["embeds"] = [
