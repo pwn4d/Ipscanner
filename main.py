@@ -17,7 +17,7 @@ try:
     ports = [int(argv[1].strip())]
 except Exception:
     exit('Usage: python3 main.py <PORT>')
-os.system('ulimit -n 1000000 -s 10000000000000')
+os.system('ulimit -n 1000000 ')
 
 
 hostname = []
