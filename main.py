@@ -40,8 +40,7 @@ def webhook_send(ip, port,hostname, webhook):
     except requests.exceptions.HTTPError as error:
         return
     else:
-        print("Sent to Webhook"
-              " {}.".format(result.status_code))
+        print("Sent to Webhook")
 
 def get_time():
     return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -80,8 +79,6 @@ def scan_ports(ip):
             if ENABLE_TLD_SCANNING == 1:
                 if hostname.count('.') == 1 :
                     webhook_send(ip,port,hostname, url2)
-
-            # message =+ f'{ip} '
             sock.close()
 
 
