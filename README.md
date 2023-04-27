@@ -8,6 +8,9 @@ THIS IS A STABLE REWRITE OF THE MAIN BRANCH
 
 ## Installation
 ```bash
+git clone https://github.com/pwn4d/Ipscanner.git
+```
+```
 cd ipscanner
 ```
 
