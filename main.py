@@ -1,127 +1,91 @@
-
-ENABLE_TLD_SCANNING = 1 #change value to 0 to disable
-import multiprocessing
 import random
+import socket
 import subprocess
-from datetime import datetime
-from colorama import Fore
 import os
-import signal
-import sys
-import requests
-from sys import argv
-if os.geteuid() != 0:
-    exit('Run As Root')
-try:
+from datetime import datetime 
 
-    ports = [int(argv[1].strip())]
-except Exception:
-    exit('Usage: python3 main.py <PORT>')
-os.system('ulimit -n 1000000 ')
+# variables that dont need to be changed
+count_packets = str()
+packet_timeout = str()
+port = 80
 
+def main():
+    os_settings()
+    while True:
+  
+        # variables that must be reinitialized every iteration
+        hostname = "No Hostname"
+        checked = str()
+        scan = str()
+        ip = generate_ip()
+        checked = check_ip(ip)
 
-hostname = []
-data = {}
-signal.signal(signal.SIGINT, lambda x, y: sys.exit(0))
-message = ''
-url1 = '' #NORMAL SCANNING WEBHOOK
-url2 = '' #TLD WEBHOOK
-
-def webhook_send(ip, port,hostname, webhook):
-    data["embeds"] = [
-        {
-            "description" : f"Port {port} is open",
-            "title" : f"{ip} {hostname[0]}"
-        }
-    ]
-    result = requests.post(webhook, json = data)
-    try:
-        result.raise_for_status()
-    except requests.exceptions.HTTPError as error:
-        return
-    else:
-        print("Sent to Webhook")
-
-def get_time():
-    return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-
-def scan_ports(ip):
-    global message
-    import socket
-    hostname = ''
-    time = get_time()
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-
-    try:
-        hostname = socket.gethostbyaddr(ip)
-    except Exception:
-        return
-
-    for port in ports:
-
-        checkForPort = sock.connect_ex((ip, port))
-
-        if checkForPort == 0:
-
-
-            with open('output', 'a') as f:
-                f.write(f'{time} {port} is open for {ip} | {hostname[0]} \n\n')
-
-
-            try:
-                print(f"Port {port} is open for {ip} {hostname[0]}")
-            except Exception:
-                return
-
-            webhook_send(ip, port, hostname, url1)
-
-            if ENABLE_TLD_SCANNING == 1:
-                if hostname.count('.') == 1 :
-                    webhook_send(ip,port,hostname, url2)
-            sock.close()
-
-
-        else:
-            print(f'port is not open for {ip}')
-            sock.close()
-
-def check_ip(ip):
-    return True if os.system("ping -c 1 " + ip + " > /dev/null 2>&1") == 0 else False
-
-def output_results(ip):
-    response = check_ip
-    if response:
-
-
-        print(f' {(get_time())} ({Fore.GREEN}+{Fore.WHITE}) {ip} is an IP')
-
-    elif not response:
-        print(f' {(get_time())} ({Fore.RED}-{Fore.WHITE}) {ip} is not an IP')
-
-def find_ip():
+        match checked:
+            case 0: 
+                scan = scan_ip(ip,port)
+            case 1:
+                print_result(ip,port,0,hostname)
+                continue
+        match scan:
+            case 0:
+                get_hostname(ip)
+                print_result(ip,port,2,hostname)
+            case _:
+                print_result(ip,port,1,hostname)
+# sets the switches for the ping command based on the current os
+def os_settings():
+    global count_packets
+    global packet_timeout
+    if os.name == 'nt':
+        count_packets = "-n"
+        packet_timeout = "-w"
+    elif os.name == 'posix':
+        count_packets = "-c"
+        packet_timeout = "-W"
+# generate IP
+def generate_ip():
     ip = []
+    # generates a random number between 0 and 255 4 times. Adds them to a list
     for i in range(4):
-        ip.append(str(random.randint(0, 255)))
-    ip = '.'.join(ip)
-    check_ip(ip)
-    output_results(ip)
-    scan_ports(ip)
-
-if __name__ == "__main__":
+        ip.append(str(random.randint(0,255)))
+    # joins the list together with .'s
+    return '.'.join(ip)
+# check if IP is up
+def check_ip(ip):
+    # creates a new subprocess the pings the IP address with 1 packet with a timeout of 1 second
+    up = subprocess.run(['ping', packet_timeout, '1', count_packets, '1', ip],stdout=subprocess.DEVNULL)
+    return up.returncode
+# scan IP
+def scan_ip(ip, port):
+    # creates new socket
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    # Set a timeout of 1 second
+    sock.settimeout(1)
     try:
-        thing = 1
-        queue = multiprocessing.Queue()
-        processes = [multiprocessing.Process(target=find_ip, args=()) for i in range(100000) ]
+        # attempts to connect the the ip:port
+        checkForPort = sock.connect_ex((ip, port))
+    except socket.error:
+        print("Couldn't connect to %s:%d" % (ip, port))
+    return checkForPort
+# get current time
+def get_time():
+    return datetime.now().strftime('%H:%M:%S')
+# get the hostname from the IP address
+def get_hostname(ip):
+    global hostname
+    try:
+        hostname = socket.gethostbyaddr(ip)[0]
+    except socket.herror:
+        return
+# prints the resuts out
+def print_result(ip,port,result,hostname):
+    match result:
+        case 0:
+            print(f"\r{get_time()} - {ip} is not a valid IP address \033[K ", end="\r")
+        case 1:
+            print(f"\r{get_time()} - {ip}:{port}  is not open \033[K ", end="\r")
+        case 2:
+            print(f"\033[K{get_time()} - {ip}:{port} ({hostname}) is open")
 
-        for p in processes:
 
-            p.start()
-
-        for p in processes:
-            p.terminate()
-        for p in processes:
-            p.join()
-    except Exception as ex: print(f'Usage: python3 {argv[0]} <PORT>\n{ex}')
-
-
+main()
